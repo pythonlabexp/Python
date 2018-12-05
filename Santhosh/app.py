@@ -1,35 +1,30 @@
-
-
-from flask import Flask
+from flask.app import Flask
+from flask.globals import request, session
 from flask.templating import render_template
-from flask.globals import request
-from requests.sessions import session, Session
+
+app = Flask(__name__)
+app.secret_key = 'ASF$^UHgfjf890'
+print(app.config)
 
 
-app=Flask(__name__)
-app.secret_key="Santhoshkumar"
-
-
-@app.route("/hello/<name>")
-def home(name=None):
-    return "Good Morning"+name
-
-@app.route("/contact", methods=["GET","POST"])
-def contact():
-    if request.method=="GET":
-        return render_template("contact.html")
-    elif request.method=="POST":
-        name=request.form("username")
-        age=request.form("age")
-        email=request.form("email")
-        phno=request.form("phonenumber")
-        address=request.form("paddr")
+@app.route('/')
+@app.route('/save', methods=['GET', 'POST'])
+def index():
+    if request.method == 'GET':
+        return render_template('contact.html')
+    if request.method == 'POST':
+        name=request.form
+        print( name["username"])
         
-        #session['username']=request.form("username")
+        session['user'] = name["username"]
+        session['address'] = name["paddr"]
+        session['phone']=name["phonenumber"]
+        
+        
+        return render_template('sucess.html')
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
     
-        return render_template("sucess.html")
-
-
-
-if __name__=="__main__":
-    app.run("localhost",debug=True,port=1000)
+    
